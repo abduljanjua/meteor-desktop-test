@@ -1,0 +1,140 @@
+{
+  "name": "meteor-desktop-test",
+  "version": "2.2.5",
+  "bin": {
+    "meteor-desktop": "dist/bin/cli.js"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "description": "This is a test orignal package is https://github.com/wojtkowiak/meteor-desktop",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test nyc mocha -t 10000 -r ./tests/helpers/clear.js \"tests/+(unit|functional)/**/*.test.js\"",
+    "test-integration": "mocha -t 10000 -r reify \"tests/+(integration)/**/*.test.js\"",
+    "test-watch": "mocha -r ./tests/helpers/clear.js --compilers js:@babel/register \"tests/+(unit|functional)/**/*.test.js\" --watch",
+    "lint": "eslint lib plugins scaffold skeleton tests",
+    "prepare-integration-tests": "node tests/integration/prepare.js",
+    "coverage-html": "nyc report --reporter=lcov",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "version": "node dist/scripts/propagateVersion.js && git add plugins",
+    "postversion": "npm run publish-all",
+    "postinstall": "node dist/scripts/addToScripts || echo",
+    "publish-plugins": "(cls || reset) && cd plugins/bundler && (meteor publish --release=METEOR@1.8.1) && cd ../watcher && (meteor publish --release=METEOR@1.8.1)",
+    "prepublish": "npm run build || echo",
+    "publish-all": "npm run publish-plugins && npm publish",
+    "build": "babel lib --out-dir dist --source-maps inline --copy-files",
+    "build-watch": "babel lib --watch --out-dir dist --source-maps inline --copy-files",
+    "develop": "npm-run-all --parallel build-watch test-watch",
+    "generate-docs": "jsdoc2md skeleton/preload.js > docs/api/desktop.md && jsdoc2md skeleton/modules/module.js > docs/api/module.md",
+    "update-locks": "(rmdir /S /Q node_modules || rm -rf node_modules || echo) && yarn && (rmdir /S /Q node_modules || rm -rf node_modules) && npm i"
+  },
+  "author": "test from abdul",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/register": "7.5.5",
+    "babel-plugin-istanbul": "^5.2.0",
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "codecov": "1.0.1",
+    "connect": "3.6.6",
+    "connect-modrewrite": "0.9.0",
+    "coveralls": "3.0.5",
+    "cross-env": "3.1.4",
+    "dirty-chai": "1.2.2",
+    "eslint": "4.19.1",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-plugin-import": "2.12.0",
+    "find-port": "2.0.1",
+    "fs-extra": "4.0.1",
+    "fs-plus": "2.9.3",
+    "import-fresh": "2.0.0",
+    "jsdoc-to-markdown": "5.0.0",
+    "mime": "2.0.3",
+    "mocha": "2.5.3",
+    "mockery": "2.1.0",
+    "npm-run-all": "4.0.1",
+    "nyc": "14.1.1",
+    "proxyquire": "1.7.11",
+    "queue": "4.0.1",
+    "reify": "0.17.3",
+    "request": "2.88.0",
+    "rewire": "3.0.2",
+    "run-sequence": "1.2.2",
+    "send": "0.16.2",
+    "serve-static": "1.13.2",
+    "server-destroy": "1.0.1",
+    "sha1-file": "1.0.1",
+    "sinon": "2.3.1",
+    "sinon-chai": "2.10.0",
+    "spectron": "8.0.0",
+    "temp-dir": "2.0.0",
+    "watch": "1.0.2"
+  },
+  "dependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/runtime": "7.5.5",
+    "asar": "0.14.3",
+    "cacache": "10.0.4",
+    "commander": "2.17.1",
+    "cross-spawn": "5.0.1",
+    "del": "2.2.2",
+    "install-local": "0.6.0",
+    "isbinaryfile": "3.0.3",
+    "lodash": "4.17.15",
+    "md5": "2.2.1",
+    "mksnapshot": "0.3.5",
+    "node-fetch": "2.2.0",
+    "regenerator-runtime": "0.12.1",
+    "rimraf": "2.6.2",
+    "semver": "5.5.1",
+    "shelljs": "0.8.2",
+    "single-line-log": "1.1.2",
+    "terser": "3.8.2"
+  },
+  "peerDependencies": {
+    "app-builder-lib": "*",
+    "electron-builder": "*",
+    "electron-packager": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wojtkowiak/meteor-desktop.git"
+  },
+  "keywords": [
+    "electron",
+    "meteor",
+    "packager",
+    "desktop"
+  ],
+  "nyc": {
+    "exclude": [
+      ".reify-cache",
+      "dist",
+      "node_modules",
+      "plugins",
+      "tests",
+      "scaffold",
+      "lib",
+      "devEnvSetup.js"
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "all": true
+  },
+  "bugs": {
+    "url": "https://github.com/wojtkowiak/meteor-desktop/issues"
+  },
+  "homepage": "https://github.com/wojtkowiak/meteor-desktop",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "tests"
+  }
+}
